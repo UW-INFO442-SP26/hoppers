@@ -1,3 +1,5 @@
+# Implementation Prompting 
+```text
 ├── frontend/
 │   ├── package.json
 │   └── src/
@@ -10,3 +12,12 @@
 │       │   └── MapView.jsx
 │       └── services/
 │           └── api.js
+```
+### Initial Setup Commands
+
+```bash
+npm create vite@latest frontend -- --template react
+cd frontend
+npm install
+npm run dev
+```
