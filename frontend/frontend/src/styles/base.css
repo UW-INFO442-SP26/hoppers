@@ -1,0 +1,26 @@
+.app-shell {
+  --uw-purple: #4b2e83;
+  --uw-purple-dark: #34205f;
+  --uw-gold: #b7a57a;
+  --ink: #1b1726;
+  --muted: #6f6a7a;
+  --line: #ded9e8;
+  --panel: #ffffff;
+  --panel-soft: #f7f5fb;
+  --danger: #dc3d35;
+  --success: #18844f;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #ececf0;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(183, 165, 122, 0.72);
+  outline-offset: 2px;
+}
+
+button:hover {
+  filter: brightness(0.98);
+}

@@ -1,0 +1,151 @@
+.route-panel,
+.details-panel,
+.navigation-card,
+.route-alert {
+  position: absolute;
+  z-index: 5;
+  border: 1px solid rgba(68, 56, 96, 0.1);
+  border-radius: 7px;
+  background: var(--panel);
+  box-shadow: 0 18px 46px rgba(35, 28, 54, 0.18);
+}
+
+.route-panel {
+  top: 20px;
+  left: 20px;
+  width: min(360px, calc(100% - 40px));
+  max-height: calc(100vh - 92px);
+  overflow: auto;
+  padding: 18px;
+}
+
+.details-panel {
+  top: 20px;
+  right: 20px;
+  width: min(330px, calc(100% - 40px));
+  max-height: calc(100vh - 92px);
+  overflow: auto;
+  padding: 18px;
+}
+
+.navigation-card {
+  top: 22px;
+  left: 400px;
+  width: min(360px, calc(100% - 790px));
+  min-width: 280px;
+  overflow: hidden;
+  border: 0;
+  background: var(--uw-purple);
+  color: #fff;
+}
+
+.navigation-card::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 0 20px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.navigation-card .eyebrow,
+.navigation-card .source-note {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.navigation-card .eyebrow {
+  margin: 18px 20px 6px;
+}
+
+.navigation-card h2 {
+  margin: 0 20px 8px;
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1.14;
+}
+
+.nav-distance {
+  display: inline-flex;
+  margin: 0 20px 16px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: var(--uw-purple-dark);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.route-alert {
+  top: 210px;
+  left: 400px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 14px;
+  width: min(360px, calc(100% - 790px));
+  min-width: 280px;
+  padding: 14px;
+  border-color: #f0aaa6;
+  background: #fff7f7;
+}
+
+.route-alert.ready {
+  border-color: #a7dcc3;
+  background: #f4fbf7;
+}
+
+.route-alert.loading {
+  border-color: #ddcfaa;
+  background: #fffaf0;
+}
+
+.route-alert strong,
+.route-alert span {
+  display: block;
+}
+
+.route-alert strong {
+  margin-bottom: 4px;
+  color: var(--danger);
+  font-size: 0.86rem;
+}
+
+.route-alert.ready strong {
+  color: var(--success);
+}
+
+.route-alert.loading strong {
+  color: #8d6c1f;
+}
+
+.route-alert span {
+  color: #635d6c;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.route-alert button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--uw-purple);
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.source-note {
+  margin: 0 20px 18px;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.source-note.loading {
+  color: #8d6c1f;
+}
+
+.source-note.fallback {
+  color: #9a5a2d;
+}

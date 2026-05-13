@@ -1,0 +1,95 @@
+.app-bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 7px 18px;
+  background: var(--uw-purple);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(34, 25, 55, 0.22);
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand-mark {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+.brand-mark::before,
+.brand-mark::after,
+.brand-mark span {
+  content: "";
+  position: absolute;
+  display: block;
+}
+
+.brand-mark::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.brand-mark::after {
+  width: 2px;
+  height: 13px;
+  background: #fff;
+  transform: rotate(42deg);
+}
+
+.brand-mark span {
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #fff;
+  transform: translate(5px, -5px) rotate(42deg);
+}
+
+.top-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(340px, 52vw);
+  min-height: 32px;
+  padding: 0 8px 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 5px;
+  background: rgba(36, 20, 74, 0.42);
+}
+
+.top-search span {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.top-search select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  color: #fff;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.top-search select option {
+  color: var(--ink);
+}

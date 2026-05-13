@@ -1,0 +1,88 @@
+@media (max-width: 1180px) {
+  .navigation-card,
+  .route-alert {
+    right: 370px;
+    width: auto;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 980px) {
+  .map-stage {
+    display: grid;
+    gap: 14px;
+    min-height: auto;
+    overflow: visible;
+    padding: 14px;
+    background: #ececf0;
+  }
+
+  .campus-map,
+  .route-panel,
+  .details-panel,
+  .navigation-card,
+  .route-alert {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-width: 0;
+    max-height: none;
+  }
+
+  .campus-map {
+    min-height: 420px;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .navigation-card {
+    order: 2;
+  }
+
+  .route-alert {
+    order: 3;
+  }
+
+  .route-panel {
+    order: 4;
+  }
+
+  .details-panel {
+    order: 5;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 9px 12px 12px;
+  }
+
+  .top-search {
+    width: 100%;
+  }
+
+  .campus-map {
+    min-height: 360px;
+  }
+
+  .route-form,
+  .details-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .route-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .route-tabs button {
+    border-right: 0;
+    border-bottom: 1px solid #d8d1e5;
+  }
+
+  .route-tabs button:last-child {
+    border-bottom: 0;
+  }
+}

@@ -1,0 +1,124 @@
+.route-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 10px;
+  margin-bottom: 14px;
+}
+
+.route-form label {
+  grid-column: 1 / -1;
+  color: #50495f;
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.route-form select {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #cfc7dd;
+  border-radius: 5px;
+  color: var(--ink);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.swap-button {
+  justify-self: start;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid #cfc7dd;
+  border-radius: 5px;
+  color: var(--uw-purple);
+  background: #fff;
+  font-size: 0.76rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.route-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 12px 0 16px;
+  overflow: hidden;
+  border: 1px solid #d8d1e5;
+  border-radius: 6px;
+  background: var(--panel-soft);
+}
+
+.route-tabs button {
+  min-height: 34px;
+  border: 0;
+  border-right: 1px solid #d8d1e5;
+  color: #665f71;
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.route-tabs button:last-child {
+  border-right: 0;
+}
+
+.route-tabs button.active {
+  color: #fff;
+  background: var(--uw-purple);
+}
+
+.travel-summary {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 14px;
+}
+
+.travel-summary strong {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.travel-summary span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.primary-action {
+  width: 100%;
+  min-height: 42px;
+  margin-bottom: 16px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--uw-purple);
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.steps-panel {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.steps-panel h2 {
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.steps-panel ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0 0 0 22px;
+}
+
+.steps-panel li {
+  color: #4d475a;
+  font-size: 0.82rem;
+  line-height: 1.36;
+}
