@@ -72,6 +72,7 @@ export function RoutePanel({
                 ...current,
                 avoidStairs: route.id === 'accessible',
                 preferCovered: route.id === 'sheltered',
+                allowStairs: route.id === 'stairs',
               }))
             }}
             type="button"

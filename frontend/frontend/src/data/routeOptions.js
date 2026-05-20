@@ -31,4 +31,17 @@ export const routeOptions = [
       walking_speed: 4.4,
     },
   },
+  {
+    id: 'stairs',
+    label: 'Stairs OK',
+    detail: 'Takes the most direct path including staircases.',
+    tags: ['Includes stairs', 'Shortest distance'],
+    costingOptions: {
+      step_penalty: 0,
+      use_hills: 1,
+      walking_speed: 5.1,
+    },
+  },
 ]
+
+
