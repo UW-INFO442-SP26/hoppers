@@ -31,6 +31,7 @@ function App() {
     () => places.find((place) => place.id === startId),
     [startId],
   )
+
   const selectedBuilding = useMemo(
     () => places.find((place) => place.id === destinationId),
     [destinationId],
@@ -64,7 +65,9 @@ function App() {
       selectedBuilding,
       selectedRoute,
     )
+
     const controller = new AbortController()
+
     const loadingTimer = window.setTimeout(() => {
       setRouteData({
         ...fallbackRoute,
@@ -82,7 +85,9 @@ function App() {
       .then((route) => {
         setRouteData(route)
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Valhalla failed:', error)
+
         if (!controller.signal.aborted) {
           setRouteData(fallbackRoute)
         }
@@ -133,7 +138,7 @@ function App() {
     const markerLayer = markerLayerRef.current
     const routeLayer = routeLayerRef.current
 
-    if (!map || !markerLayer || !routeLayer) {
+    if (!map || !markerLayer || !routeLayer || !startLocation || !selectedBuilding) {
       return
     }
 
@@ -182,6 +187,7 @@ function App() {
         ? routeData.path
         : [startLocation.latLng, selectedBuilding.latLng],
     )
+
     map.fitBounds(bounds.pad(0.45), {
       animate: false,
       maxZoom: 17,
@@ -214,7 +220,7 @@ function App() {
   const focusRouteOnMap = () => {
     const map = mapInstanceRef.current
 
-    if (!map) {
+    if (!map || !startLocation || !selectedBuilding) {
       return
     }
 
@@ -238,8 +244,9 @@ function App() {
       }).format(new Date(clockStart + routeData.duration * 60000)),
     [clockStart, routeData.duration],
   )
+
   const primaryStep =
-    routeData.steps[0] ?? `Head toward ${selectedBuilding.name}.`
+    routeData.steps[0] ?? `Head toward ${selectedBuilding?.name ?? 'destination'}.`
 
   return (
     <main className="app-shell">
@@ -289,3 +296,4 @@ function App() {
 }
 
 export default App
+
