@@ -59,3 +59,23 @@
   color: #1f1730;
   background: var(--uw-gold);
 }
+
+/* Report markers (small red triangle pin) */
+.hp-map-marker.report {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.hp-report-dot {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 12px solid #e53935; /* red triangle */
+}
+
+/* subtle white outline for contrast */
+.hp-map-marker.report .hp-report-dot {
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(0,0,0,0.3));
+}

@@ -9,7 +9,7 @@ import { RouteAlert } from './components/RouteAlert'
 import { RoutePanel } from './components/RoutePanel'
 import { places } from './data/places'
 import { routeOptions } from './data/routeOptions'
-import { getMarkerIcon } from './utils/mapMarkers'
+import { getMarkerIcon, getReportIcon } from './utils/mapMarkers'
 import { buildFallbackRoute, getValhallaRoute } from './utils/routing'
 import './App.css'
 
@@ -18,6 +18,7 @@ function App() {
   const mapInstanceRef = useRef(null)
   const markerLayerRef = useRef(null)
   const routeLayerRef = useRef(null)
+  const reportsLayerRef = useRef(null)
   const [startId, setStartId] = useState('red-square')
   const [destinationId, setDestinationId] = useState('mgh')
   const [routeId, setRouteId] = useState('accessible')
@@ -26,6 +27,11 @@ function App() {
     avoidStairs: true,
     preferCovered: false,
   })
+
+  // Pin-drop state
+  const [reports, setReports] = useState([])
+  const [pendingPin, setPendingPin] = useState(null)
+  const [pendingType, setPendingType] = useState('pothole')
 
   const startLocation = useMemo(
     () => places.find((place) => place.id === startId),
@@ -119,7 +125,14 @@ function App() {
 
     markerLayerRef.current = L.layerGroup().addTo(map)
     routeLayerRef.current = L.layerGroup().addTo(map)
+    reportsLayerRef.current = L.layerGroup().addTo(map)
     mapInstanceRef.current = map
+
+    // Click to drop a pin (ignore if already placing one)
+    map.on('click', (e) => {
+      if (pendingPin) return
+      setPendingPin({ latLng: [e.latlng.lat, e.latlng.lng] })
+    })
 
     window.setTimeout(() => {
       map.invalidateSize()
@@ -130,6 +143,7 @@ function App() {
       mapInstanceRef.current = null
       markerLayerRef.current = null
       routeLayerRef.current = null
+      reportsLayerRef.current = null
     }
   }, [])
 
@@ -194,6 +208,37 @@ function App() {
     })
   }, [routeData.path, selectedRoute.id, startLocation, selectedBuilding])
 
+  // Temporary marker for pending pin
+  useEffect(() => {
+    const map = mapInstanceRef.current
+    if (!map || !pendingPin) return
+
+    const tempMarker = L.marker(pendingPin.latLng, {
+      // small dot instead of labeled marker
+      icon: getReportIcon('pending'),
+    }).addTo(map)
+
+    return () => {
+      map.removeLayer(tempMarker)
+    }
+  }, [pendingPin])
+
+  // Render approved reports
+  useEffect(() => {
+    const layer = reportsLayerRef.current
+    if (!layer) return
+
+    layer.clearLayers()
+
+    reports.forEach((report) => {
+      if (report.status !== 'approved') return
+
+      L.marker(report.latLng, {
+        icon: getReportIcon(report.type),
+      }).addTo(layer)
+    })
+  }, [reports])
+
   const handleStartChange = (event) => {
     const nextStartId = event.target.value
     setStartId(nextStartId)
@@ -248,6 +293,21 @@ function App() {
   const primaryStep =
     routeData.steps[0] ?? `Head toward ${selectedBuilding?.name ?? 'destination'}.`
 
+  const submitReport = () => {
+    if (!pendingPin) return
+
+    const newReport = {
+      id: Date.now(),
+      latLng: pendingPin.latLng,
+      type: pendingType,
+      status: 'approved',
+    }
+
+    setReports((prev) => [...prev, newReport])
+    setPendingPin(null)
+    setPendingType('pothole')
+  }
+
   return (
     <main className="app-shell">
       <AppHeader
@@ -263,6 +323,52 @@ function App() {
           selectedBuilding={selectedBuilding}
           startLocation={startLocation}
         />
+
+        {pendingPin && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(0,0,0,0.25)',
+              zIndex: 2000,
+            }}
+          >
+            <div
+              className="pin-form"
+              style={{
+                background: '#fff',
+                padding: 16,
+                borderRadius: 10,
+                minWidth: 240,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+              }}
+            >
+              <div style={{ marginBottom: 8, fontWeight: 600 }}>
+                Report an issue
+              </div>
+
+              <select
+                value={pendingType}
+                onChange={(e) => setPendingType(e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <option value="pothole">Pothole</option>
+                <option value="graffiti">Graffiti</option>
+                <option value="streetlight">Streetlight</option>
+              </select>
+
+              <div
+                style={{ marginTop: 12, display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+              >
+                <button onClick={() => setPendingPin(null)}>Cancel</button>
+                <button onClick={submitReport}>Submit</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <RoutePanel
           arrivalTime={arrivalTime}
@@ -296,4 +402,3 @@ function App() {
 }
 
 export default App
-
