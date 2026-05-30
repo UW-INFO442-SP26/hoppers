@@ -39,7 +39,12 @@ export function RoutePanel({
           ))}
         </select>
 
-        <button className="swap-button" onClick={swapRoute} type="button">
+        <button
+          aria-label="Swap start and destination"
+          className="swap-button"
+          onClick={swapRoute}
+          type="button"
+        >
           Swap
         </button>
 
@@ -64,6 +69,7 @@ export function RoutePanel({
       <div className="route-tabs" aria-label="Route options">
         {routeOptions.map((route) => (
           <button
+            aria-pressed={route.id === selectedRoute.id}
             className={route.id === selectedRoute.id ? 'active' : ''}
             key={route.id}
             onClick={() => {

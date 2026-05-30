@@ -75,7 +75,7 @@
 }
 
 .route-alert {
-  top: 210px;
+  bottom: 20px;
   left: 400px;
   display: grid;
   grid-template-columns: 1fr auto;
