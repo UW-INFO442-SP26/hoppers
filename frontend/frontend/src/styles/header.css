@@ -22,43 +22,51 @@
 }
 
 .brand-mark {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-}
-
-.brand-mark::before,
-.brand-mark::after,
-.brand-mark span {
-  content: "";
-  position: absolute;
   display: block;
-}
-
-.brand-mark::before {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+  width: 28px;
+  height: 24px;
+  padding: 4px 5px;
+  border-radius: 4px;
   background: #fff;
+  object-fit: contain;
 }
 
-.brand-mark::after {
-  width: 2px;
-  height: 13px;
-  background: #fff;
-  transform: rotate(42deg);
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
 }
 
-.brand-mark span {
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid #fff;
-  border-right: 2px solid #fff;
-  transform: translate(5px, -5px) rotate(42deg);
+.view-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(60px, 1fr));
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(36, 20, 74, 0.32);
+}
+
+.view-tabs button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.78);
+  background: transparent;
+  font-size: 0.78rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.view-tabs button:last-child {
+  border-right: 0;
+}
+
+.view-tabs button.active {
+  color: #261f36;
+  background: var(--uw-gold);
 }
 
 .top-search {

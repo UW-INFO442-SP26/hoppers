@@ -5,4 +5,6 @@
 @import './styles/typography.css';
 @import './styles/route-panel.css';
 @import './styles/details-panel.css';
+@import './styles/reports.css';
+@import './styles/mvp-hub.css';
 @import './styles/responsive.css';

@@ -1,0 +1,79 @@
+.report-form-panel {
+  position: absolute;
+  right: 370px;
+  bottom: 22px;
+  z-index: 8;
+  display: grid;
+  gap: 10px;
+  width: min(340px, calc(100% - 790px));
+  min-width: 280px;
+  padding: 14px;
+  border: 1px solid rgba(68, 56, 96, 0.12);
+  border-radius: 7px;
+  background: var(--panel);
+  box-shadow: 0 18px 46px rgba(35, 28, 54, 0.2);
+}
+
+.report-form-panel h2 {
+  font-size: 1rem;
+}
+
+.report-form-panel p {
+  margin: 0;
+  color: #635d6c;
+  font-size: 0.78rem;
+  line-height: 1.38;
+}
+
+.report-form-panel label {
+  color: #50495f;
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.report-form-panel select,
+.report-form-panel textarea {
+  width: 100%;
+  border: 1px solid #cfc7dd;
+  border-radius: 5px;
+  color: var(--ink);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.report-form-panel select {
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.report-form-panel textarea {
+  min-height: 72px;
+  resize: vertical;
+  padding: 9px 10px;
+  line-height: 1.35;
+}
+
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.report-actions button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid #d6cfe3;
+  border-radius: 5px;
+  color: var(--uw-purple);
+  background: #fff;
+  font-size: 0.76rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.report-actions .submit-report {
+  border-color: var(--uw-purple);
+  color: #fff;
+  background: var(--uw-purple);
+}

@@ -4,14 +4,50 @@ import 'leaflet/dist/leaflet.css'
 import { AppHeader } from './components/AppHeader'
 import { BuildingDetails } from './components/BuildingDetails'
 import { CampusMap } from './components/CampusMap'
+import { MvpHub } from './components/MvpHub'
 import { NavigationCard } from './components/NavigationCard'
+import { ReportForm } from './components/ReportForm'
 import { RouteAlert } from './components/RouteAlert'
 import { RoutePanel } from './components/RoutePanel'
+import { getReportType } from './data/reportTypes'
 import { places } from './data/places'
 import { routeOptions } from './data/routeOptions'
-import { getMarkerIcon, getReportIcon } from './utils/mapMarkers'
+import { stairWarnings } from './data/stairWarnings'
+import { getMarkerIcon, getReportIcon, getStairIcon } from './utils/mapMarkers'
 import { buildFallbackRoute, getValhallaRoute } from './utils/routing'
 import './App.css'
+
+const reportStorageKey = 'huskypath-report-submissions'
+
+const getRouteFitOptions = (animate = false) => {
+  if (typeof window === 'undefined' || window.innerWidth <= 980) {
+    return {
+      animate,
+      maxZoom: 17,
+      padding: [26, 26],
+    }
+  }
+
+  return {
+    animate,
+    maxZoom: 17,
+    paddingTopLeft: [420, 132],
+    paddingBottomRight: [380, 168],
+  }
+}
+
+const readStoredReports = () => {
+  if (typeof window === 'undefined') {
+    return []
+  }
+
+  try {
+    const storedReports = window.localStorage.getItem(reportStorageKey)
+    return storedReports ? JSON.parse(storedReports) : []
+  } catch {
+    return []
+  }
+}
 
 function App() {
   const mapRef = useRef(null)
@@ -19,19 +55,23 @@ function App() {
   const markerLayerRef = useRef(null)
   const routeLayerRef = useRef(null)
   const reportsLayerRef = useRef(null)
+  const stairLayerRef = useRef(null)
+  const [activeView, setActiveView] = useState('mvp')
   const [startId, setStartId] = useState('red-square')
   const [destinationId, setDestinationId] = useState('mgh')
   const [routeId, setRouteId] = useState('accessible')
   const [clockStart] = useState(() => Date.now())
   const [preferences, setPreferences] = useState({
     avoidStairs: true,
+    allowStairs: false,
     preferCovered: false,
   })
 
   // Pin-drop state
-  const [reports, setReports] = useState([])
+  const [reports, setReports] = useState(readStoredReports)
   const [pendingPin, setPendingPin] = useState(null)
-  const [pendingType, setPendingType] = useState('pothole')
+  const [pendingType, setPendingType] = useState('stairs')
+  const [pendingNote, setPendingNote] = useState('')
 
   const startLocation = useMemo(
     () => places.find((place) => place.id === startId),
@@ -62,6 +102,10 @@ function App() {
   )
 
   useEffect(() => {
+    window.localStorage.setItem(reportStorageKey, JSON.stringify(reports))
+  }, [reports])
+
+  useEffect(() => {
     if (!startLocation || !selectedBuilding || !selectedRoute) {
       return undefined
     }
@@ -80,7 +124,7 @@ function App() {
         source: 'Calculating pedestrian route...',
         status: 'loading',
       })
-    }, 0)
+    }, 300)
 
     getValhallaRoute(
       startLocation,
@@ -89,10 +133,13 @@ function App() {
       controller.signal,
     )
       .then((route) => {
+        window.clearTimeout(loadingTimer)
         setRouteData(route)
       })
       .catch((error) => {
-        console.error('Valhalla failed:', error)
+        console.error('Routing API failed:', error)
+
+        window.clearTimeout(loadingTimer)
 
         if (!controller.signal.aborted) {
           setRouteData(fallbackRoute)
@@ -126,12 +173,13 @@ function App() {
     markerLayerRef.current = L.layerGroup().addTo(map)
     routeLayerRef.current = L.layerGroup().addTo(map)
     reportsLayerRef.current = L.layerGroup().addTo(map)
+    stairLayerRef.current = L.layerGroup().addTo(map)
     mapInstanceRef.current = map
 
-    // Click to drop a pin (ignore if already placing one)
     map.on('click', (e) => {
-      if (pendingPin) return
-      setPendingPin({ latLng: [e.latlng.lat, e.latlng.lng] })
+      setPendingPin((currentPin) =>
+        currentPin ?? { latLng: [e.latlng.lat, e.latlng.lng] },
+      )
     })
 
     window.setTimeout(() => {
@@ -144,7 +192,31 @@ function App() {
       markerLayerRef.current = null
       routeLayerRef.current = null
       reportsLayerRef.current = null
+      stairLayerRef.current = null
     }
+  }, [])
+
+  useEffect(() => {
+    const layer = stairLayerRef.current
+
+    if (!layer) {
+      return
+    }
+
+    layer.clearLayers()
+
+    stairWarnings.forEach((warning) => {
+      L.marker(warning.latLng, {
+        icon: getStairIcon(),
+        bubblingMouseEvents: false,
+        keyboard: true,
+        title: warning.label,
+      })
+        .bindTooltip(`${warning.label}: ${warning.description}`, {
+          direction: 'top',
+        })
+        .addTo(layer)
+    })
   }, [])
 
   useEffect(() => {
@@ -181,6 +253,7 @@ function App() {
           place.id === startLocation.id ? 'Start' : place.shortName,
           markerType,
         ),
+        bubblingMouseEvents: false,
         keyboard: true,
         title: place.name,
       })
@@ -198,14 +271,11 @@ function App() {
 
     const bounds = L.latLngBounds(
       routeData.path.length > 1
-        ? routeData.path
+        ? [...routeData.path, startLocation.latLng, selectedBuilding.latLng]
         : [startLocation.latLng, selectedBuilding.latLng],
     )
 
-    map.fitBounds(bounds.pad(0.45), {
-      animate: false,
-      maxZoom: 17,
-    })
+    map.fitBounds(bounds.pad(0.12), getRouteFitOptions(false))
   }, [routeData.path, selectedRoute.id, startLocation, selectedBuilding])
 
   // Temporary marker for pending pin
@@ -235,9 +305,22 @@ function App() {
 
       L.marker(report.latLng, {
         icon: getReportIcon(report.type),
-      }).addTo(layer)
+        title: getReportType(report.type).label,
+      })
+        .bindTooltip(report.note || getReportType(report.type).description, {
+          direction: 'top',
+        })
+        .addTo(layer)
     })
   }, [reports])
+
+  useEffect(() => {
+    if (activeView === 'map' && mapInstanceRef.current) {
+      window.setTimeout(() => {
+        mapInstanceRef.current?.invalidateSize()
+      }, 0)
+    }
+  }, [activeView])
 
   const handleStartChange = (event) => {
     const nextStartId = event.target.value
@@ -271,14 +354,11 @@ function App() {
 
     const bounds = L.latLngBounds(
       routeData.path.length > 1
-        ? routeData.path
+        ? [...routeData.path, startLocation.latLng, selectedBuilding.latLng]
         : [startLocation.latLng, selectedBuilding.latLng],
     )
 
-    map.fitBounds(bounds.pad(0.45), {
-      animate: true,
-      maxZoom: 17,
-    })
+    map.fitBounds(bounds.pad(0.12), getRouteFitOptions(true))
   }
 
   const arrivalTime = useMemo(
@@ -292,83 +372,91 @@ function App() {
 
   const primaryStep =
     routeData.steps[0] ?? `Head toward ${selectedBuilding?.name ?? 'destination'}.`
+  const routeAnnouncement =
+    routeData.status === 'loading'
+      ? `Checking route from ${startLocation.name} to ${selectedBuilding.name}.`
+      : `${selectedRoute.label} route from ${startLocation.name} to ${selectedBuilding.name}: ${routeData.duration} minutes, ${routeData.distance}. ${routeData.source}`
+
+  const cancelReport = () => {
+    setPendingPin(null)
+    setPendingType('stairs')
+    setPendingNote('')
+  }
 
   const submitReport = () => {
     if (!pendingPin) return
 
     const newReport = {
       id: Date.now(),
+      createdAt: new Date().toISOString(),
       latLng: pendingPin.latLng,
+      note: pendingNote.trim(),
       type: pendingType,
-      status: 'approved',
+      status: 'pending',
     }
 
     setReports((prev) => [...prev, newReport])
-    setPendingPin(null)
-    setPendingType('pothole')
+    cancelReport()
+    setActiveView('mvp')
+  }
+
+  const approveReport = (reportId) => {
+    setReports((currentReports) =>
+      currentReports.map((report) =>
+        report.id === reportId ? { ...report, status: 'approved' } : report,
+      ),
+    )
+  }
+
+  const dismissReport = (reportId) => {
+    setReports((currentReports) =>
+      currentReports.map((report) =>
+        report.id === reportId ? { ...report, status: 'dismissed' } : report,
+      ),
+    )
   }
 
   return (
     <main className="app-shell">
+      <a
+        className="skip-link"
+        href={activeView === 'map' ? '#route-title' : '#mvp-title'}
+      >
+        Skip to current content
+      </a>
+      <p className="sr-only" role="status" aria-live="polite">
+        {routeAnnouncement}
+      </p>
+
       <AppHeader
+        activeView={activeView}
         destinationId={destinationId}
         handleDestinationChange={handleDestinationChange}
         places={places}
+        setActiveView={setActiveView}
         startId={startId}
       />
 
-      <section className="map-stage" aria-labelledby="route-title">
+      <section
+        className="map-stage"
+        aria-labelledby="route-title"
+        hidden={activeView !== 'map'}
+      >
         <CampusMap
           ref={mapRef}
           selectedBuilding={selectedBuilding}
           startLocation={startLocation}
         />
 
-        {pendingPin && (
-          <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'rgba(0,0,0,0.25)',
-              zIndex: 2000,
-            }}
-          >
-            <div
-              className="pin-form"
-              style={{
-                background: '#fff',
-                padding: 16,
-                borderRadius: 10,
-                minWidth: 240,
-                boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-              }}
-            >
-              <div style={{ marginBottom: 8, fontWeight: 600 }}>
-                Report an issue
-              </div>
-
-              <select
-                value={pendingType}
-                onChange={(e) => setPendingType(e.target.value)}
-                style={{ width: '100%' }}
-              >
-                <option value="pothole">Pothole</option>
-                <option value="graffiti">Graffiti</option>
-                <option value="streetlight">Streetlight</option>
-              </select>
-
-              <div
-                style={{ marginTop: 12, display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-              >
-                <button onClick={() => setPendingPin(null)}>Cancel</button>
-                <button onClick={submitReport}>Submit</button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ReportForm
+          cancelReport={cancelReport}
+          pendingNote={pendingNote}
+          pendingPin={pendingPin}
+          pendingType={pendingType}
+          setPendingNote={setPendingNote}
+          setPendingType={setPendingType}
+          submitReport={submitReport}
+        />
 
         <RoutePanel
           arrivalTime={arrivalTime}
@@ -397,6 +485,14 @@ function App() {
           selectedBuilding={selectedBuilding}
         />
       </section>
+
+      {activeView === 'mvp' && (
+        <MvpHub
+          approveReport={approveReport}
+          dismissReport={dismissReport}
+          reports={reports}
+        />
+      )}
     </main>
   )
 }
