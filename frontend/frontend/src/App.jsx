@@ -137,14 +137,13 @@ function App() {
         setRouteData(route)
       })
       .catch((error) => {
-        console.error('Routing API failed:', error)
-
-        window.clearTimeout(loadingTimer)
-
-        if (!controller.signal.aborted) {
+         window.clearTimeout(loadingTimer)
+          if (error.name === 'AbortError' || controller.signal.aborted) {
+             return
+             }
+          console.error('Routing API failed:', error)
           setRouteData(fallbackRoute)
-        }
-      })
+        })
 
     return () => {
       window.clearTimeout(loadingTimer)
@@ -165,6 +164,12 @@ function App() {
       zoomControl: true,
       scrollWheelZoom: true,
     })
+
+    map.on('click', (e) => {
+      console.log(
+        `latLng: [${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}]`
+       )
+     })
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
