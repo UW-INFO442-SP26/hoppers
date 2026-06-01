@@ -217,6 +217,10 @@ The main value of HuskyPath is accurate, accessibility-aware campus navigation. 
 
 ---
 
+## User Personas
+Our user personas can be viewed here: 
+---
+
 ## Summary
 
 HuskyPath is designed as a modular campus navigation system with:
