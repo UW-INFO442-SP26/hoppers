@@ -218,7 +218,7 @@ The main value of HuskyPath is accurate, accessibility-aware campus navigation. 
 ---
 
 ## User Personas
-Our user personas can be viewed here: 
+### Our user personas can be viewed here: 
 ---
 
 ## Summary
