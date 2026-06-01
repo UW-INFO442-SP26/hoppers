@@ -218,7 +218,45 @@ The main value of HuskyPath is accurate, accessibility-aware campus navigation. 
 ---
 
 ## User Personas
-### Our user personas can be viewed here: 
+## Persona 1
+![photo of Jordan](docs/resources/jordan.png)
+### About
+Jordan is a first-year UW student who has recently moved from Utah. He’s still learning the layout of campus and often feels overwhelmed navigating between large lecture halls and unfamiliar buildings, He wants a tool to reduce his stress and help him feel confidant getting around campus.
+### Age
+19
+### Education
+UW Freshman
+### Occupation
+Undergraduate Student
+### Goals
+- Find the fastest walking routes between classes
+- Avoid construction closures and last-minute detours
+- Reduce anxiety by knowing accessibility paths/building entrances
+### Frustrations 
+- Gets lost when buildings have multiple wings/hidden entrances
+- Struggles to estimate realistic travel times between back-to-back classes
+- Campus maps feel static and don’t reflect real-time changes
+
+## Persona 2
+![photo of maya](docs/resources/maya.png)
+
+### Abouts
+Maya is a junior majoring in Informatics who uses a wheelchair. She loves UW but finds that many campus routes are steep, crowded, or unexpectedly blocked. She needs a navigation tool that prioritizes accessibility and gives her confidence that she can reach her classes safely and on time.
+### Age
+20
+### Education
+UW Junior
+### Occupation
+Undergraduate Student + Part-time HUB Receptionist
+### Goals
+- Find accessible routes that avoid stairs or wheelchair-unfriendly paths
+- Get accurate ETA predictions based on mobility needs
+- Plan routes that include ramps and accessible entrances
+
+### Frustrations:
+- Google maps doesn’t show accessible paths
+- Backtracking forces her to take longer/more unpredictable routes
+- Crowded walkways often slow her down
 ---
 
 ## Summary
