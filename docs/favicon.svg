@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HuskyPath">
+  <rect width="64" height="64" rx="14" fill="#4b2e83"/>
+  <path d="M14 22 25 10l7 9 7-9 11 12-3 24-15 8-15-8-3-24Z" fill="#f5f2ff"/>
+  <path d="m18 25 8-8 6 9 6-9 8 8-2 17-12 7-12-7-2-17Z" fill="#ffffff"/>
+  <path d="M20 43h24l-12 7-12-7Z" fill="#b7a57a"/>
+  <path d="m25 31 5 4-5 4-5-4 5-4Zm14 0 5 4-5 4-5-4 5-4Z" fill="#4b2e83"/>
+  <path d="M29 41h6l-3 4-3-4Z" fill="#1f1730"/>
+  <path d="M14 22 5 15l3 18 9-4-3-7Zm36 0 9-7-3 18-9-4 3-7Z" fill="#85754d"/>
+  <path d="M14 22 25 10l-1 13-7 6-3-7Zm36 0L39 10l1 13 7 6 3-7Z" fill="#2c1d55"/>
+</svg>
